@@ -17,6 +17,7 @@ public class CrearXml extends javax.swing.JFrame {
     int contadorMisterio = 0;
     int contadorComedia = 0;
 
+    //lista para almacenar
     /**
      * Creates new form CrearXml
      */
@@ -181,6 +182,7 @@ public class CrearXml extends javax.swing.JFrame {
         String genero = cbGeneros.getSelectedItem().toString();
         String linkPelicula = tfTrailer.getText().toString();
 
+        //usaremos el requestFocus en cada caso para facilitarle al usuario seleccionar el campo.
         if (titulo.isEmpty()) {
             //error si el campo titulo esta vacio
             JOptionPane.showMessageDialog(this, "Titulo Vacio");
@@ -188,9 +190,11 @@ public class CrearXml extends javax.swing.JFrame {
         } else if (!duracion.matches("\\d+") && !duracion.isEmpty()) { // \\d+ es igual a [0-9]+
             // Error: duración no es entero positivo o vacio
             JOptionPane.showMessageDialog(this, "El numero ingresadod debe ser un entero y el campo no debe estar vacio");
+            tfDuracion.requestFocus();
         } else if (!(linkPelicula.startsWith("http://") || linkPelicula.startsWith("https://")) && !linkPelicula.isEmpty()) {
-            // Error: URL mal formada
+            // Error: URL mal formada 
             JOptionPane.showMessageDialog(this, "Link incorrecto, debe comenzar por 'http://' o 'https://' y el campo debe estar con informacion");
+            tfTrailer.requestFocus();
         } // 2. Validaciones de límite por género (Punto 4)
         else if (genero.equals("AVENTURA") && contadorAventura >= 3) {
             JOptionPane.showMessageDialog(this, "Límite alcanzado: Ya hay 3 películas de Aventura.");
@@ -211,6 +215,10 @@ public class CrearXml extends javax.swing.JFrame {
 
             // Mostrar en el listado
             taListado.append("Título: " + titulo + " | Género: " + genero + " | Duración: " + duracion + " min.\n");
+            //limpiar los campos una vez finalizada la agregacion
+            tfDuracion.setText("");
+            tfTitulo.setText("");
+            tfTrailer.setText("");
         }
 
 
