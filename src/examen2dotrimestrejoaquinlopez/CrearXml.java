@@ -4,6 +4,8 @@
  */
 package examen2dotrimestrejoaquinlopez;
 
+import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,12 +19,16 @@ public class CrearXml extends javax.swing.JFrame {
     int contadorMisterio = 0;
     int contadorComedia = 0;
 
-    //lista para almacenar
+    //lista para almacenar peliculas
+    ArrayList<Pelicula> listaPeliculas = new ArrayList<>();
+
     /**
      * Creates new form CrearXml
      */
     public CrearXml() {
         initComponents();
+        //asignamo que cuando se cierre esta ventana, el programa principal siga funcionando
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -94,6 +100,11 @@ public class CrearXml extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Noto Serif", 0, 10)); // NOI18N
         jButton2.setText("GENERAR XML");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -195,7 +206,9 @@ public class CrearXml extends javax.swing.JFrame {
             // Error: URL mal formada 
             JOptionPane.showMessageDialog(this, "Link incorrecto, debe comenzar por 'http://' o 'https://' y el campo debe estar con informacion");
             tfTrailer.requestFocus();
-        } // 2. Validaciones de límite por género (Punto 4)
+        } // punto 2: Validaciones de límite por género
+        //si los contadores correspondientes a cada categoria son mayores o iguales a 3.
+        //se le notificara al usuario que ya ha alcanzado el limite de peliculas por categorias
         else if (genero.equals("AVENTURA") && contadorAventura >= 3) {
             JOptionPane.showMessageDialog(this, "Límite alcanzado: Ya hay 3 películas de Aventura.");
         } else if (genero.equals("COMEDIA") && contadorComedia >= 3) {
@@ -223,6 +236,105 @@ public class CrearXml extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+
+        //Generacion de documentoXML
+        if (contadorAventura != 3 || contadorComedia != 3 || contadorMisterio != 3) {
+            JOptionPane.showMessageDialog(this, "Aún no puedes generar el XML. Faltan películas por agregar.");
+        } else {
+            try {
+                // --- 1. PREPARACIÓN DEL DOCUMENTO ---
+
+                // Crea la fábrica para poder construir el analizador de documentos XML
+                javax.xml.parsers.DocumentBuilderFactory factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+
+                // Crea el constructor (builder) que nos permite generar un documento vacío en memoria
+                javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
+
+                // Crea el objeto 'doc', que es el lienzo en blanco donde dibujaremos nuestro árbol XML
+                org.w3c.dom.Document doc = builder.newDocument();
+
+                // --- 2. CREACIÓN DE LA ESTRUCTURA PRINCIPAL ---
+                // Crea la etiqueta principal <peliculas> (el nodo raíz)
+                org.w3c.dom.Element raiz = doc.createElement("peliculas");
+                // Agrega la raíz al documento para que sea el punto de partida
+                doc.appendChild(raiz);
+
+                // Crea los tres nodos de categoría que agruparán a las películas
+                org.w3c.dom.Element nodoMisterio = doc.createElement("misterio");
+                org.w3c.dom.Element nodoAventura = doc.createElement("aventura");
+                org.w3c.dom.Element nodoComedia = doc.createElement("comedia");
+
+                // Engancha cada categoría debajo de la raíz <peliculas>
+                raiz.appendChild(nodoMisterio);
+                raiz.appendChild(nodoAventura);
+                raiz.appendChild(nodoComedia);
+
+                // --- 3. LLENADO DE DATOS (RECORRIENDO LA LISTA) ---
+                // Empezamos a recorrer la lista de objetos 'Pelicula' que fuiste guardando al dar clic en "Agregar"
+                for (Pelicula p : listaPeliculas) {
+
+                    // Para cada objeto, creamos una etiqueta contenedora llamada <pelicula>
+                    org.w3c.dom.Element nodoPeli = doc.createElement("pelicula");
+
+                    // Crea el elemento <titulo>, le mete el texto del objeto y lo pega dentro de <pelicula>
+                    org.w3c.dom.Element eTitulo = doc.createElement("titulo");
+                    eTitulo.setTextContent(p.titulo);
+                    nodoPeli.appendChild(eTitulo);
+
+                    // Crea el elemento <duracion>, le mete el texto y lo pega dentro de <pelicula>
+                    org.w3c.dom.Element eDuracion = doc.createElement("duracion");
+                    eDuracion.setTextContent(p.duracion);
+                    nodoPeli.appendChild(eDuracion);
+
+                    // Crea el elemento <trailer>, le mete el texto de la URL y lo pega dentro de <pelicula>
+                    org.w3c.dom.Element eTrailer = doc.createElement("trailer");
+                    eTrailer.setTextContent(p.trailer);
+                    nodoPeli.appendChild(eTrailer);
+
+                    // --- 4. CLASIFICACIÓN POR GÉNERO ---
+                    // Según el género que guardamos en el objeto, decidimos en qué categoría colgar la película
+                    if (p.genero.equalsIgnoreCase("Misterio")) {
+                        nodoMisterio.appendChild(nodoPeli); // Se va para <misterio>
+                    } else if (p.genero.equalsIgnoreCase("Aventura")) {
+                        nodoAventura.appendChild(nodoPeli); // Se va para <aventura>
+                    } else if (p.genero.equalsIgnoreCase("Comedia")) {
+                        nodoComedia.appendChild(nodoPeli);  // Se va para <comedia>
+                    }
+                }
+
+                // --- 5. TRANSFORMACIÓN DE MEMORIA A ARCHIVO FÍSICO ---
+                // Creamos la fábrica para transformar el árbol que está en RAM a un archivo de texto
+                javax.xml.transform.TransformerFactory tf = javax.xml.transform.TransformerFactory.newInstance();
+                javax.xml.transform.Transformer transformer = tf.newTransformer();
+
+                // Configura el XML para que tenga sangrías (espacios) y no salga todo en una sola línea
+                transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+                // Define que la sangría sea de 4 espacios (esto lo hace legible como en tu imagen)
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+                // Define la fuente de los datos (nuestro documento 'doc')
+                javax.xml.transform.dom.DOMSource origen = new javax.xml.transform.dom.DOMSource(doc);
+
+                // Define el destino (un archivo llamado "peliculas.xml" en la carpeta del proyecto)
+                java.io.File archivo = new java.io.File("peliculas.xml");
+                javax.xml.transform.stream.StreamResult destino = new javax.xml.transform.stream.StreamResult(archivo);
+
+                // Ejecuta la transformación real: escribe el archivo en el disco duro
+                transformer.transform(origen, destino);
+
+                // Avisa al usuario que todo salió bien
+                javax.swing.JOptionPane.showMessageDialog(this, "Archivo peliculas.xml generado correctamente.");
+
+            } catch (Exception ex) {
+                // Si algo falla (permisos de archivo, errores de memoria), imprime el error y avisa
+                ex.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al generar el XML.");
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
