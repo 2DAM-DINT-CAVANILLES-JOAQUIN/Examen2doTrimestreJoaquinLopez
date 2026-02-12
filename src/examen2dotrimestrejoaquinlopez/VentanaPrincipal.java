@@ -4,6 +4,9 @@
  */
 package examen2dotrimestrejoaquinlopez;
 
+import java.awt.ComponentOrientation;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author USUARIO
@@ -14,7 +17,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
+
         initComponents();
+        this.setSize(400, 400);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -28,30 +34,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu = new javax.swing.JMenu();
-        CrearXML = new javax.swing.JMenuItem();
-        LeerXML = new javax.swing.JCheckBoxMenuItem();
+        miCrearXML = new javax.swing.JMenuItem();
+        miLeerXML = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jMenu.setText("Menu");
 
-        CrearXML.setText("CrearXML");
-        CrearXML.addActionListener(new java.awt.event.ActionListener() {
+        miCrearXML.setText("CrearXML");
+        miCrearXML.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CrearXMLActionPerformed(evt);
+                miCrearXMLActionPerformed(evt);
             }
         });
-        jMenu.add(CrearXML);
+        jMenu.add(miCrearXML);
 
-        LeerXML.setSelected(true);
-        LeerXML.setText("LeerXML");
-        LeerXML.addActionListener(new java.awt.event.ActionListener() {
+        miLeerXML.setText("LeerXML");
+        miLeerXML.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LeerXMLActionPerformed(evt);
+                miLeerXMLActionPerformed(evt);
             }
         });
-        jMenu.add(LeerXML);
+        jMenu.add(miLeerXML);
 
         jMenuBar1.add(jMenu);
 
@@ -60,18 +65,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void CrearXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearXMLActionPerformed
+    private void miCrearXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCrearXMLActionPerformed
         // TODO add your handling code here:
-        
-        //mostramos la vista "Crear XML"
-        CrearXML.setVisible(true);
-    }//GEN-LAST:event_CrearXMLActionPerformed
 
-    private void LeerXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeerXMLActionPerformed
+        //metodo para mostrar la vista "Crear XML"
+        //creamo una nueva vista
+        CrearXml vistaCrear = new CrearXml();
+        //hacemos la vista visible
+        vistaCrear.setVisible(true);
+    }//GEN-LAST:event_miCrearXMLActionPerformed
+
+    private void miLeerXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLeerXMLActionPerformed
         // TODO add your handling code here:
-        //mostrar la vista "leer XML"
-        LeerXML.setVisible(true);
-    }//GEN-LAST:event_LeerXMLActionPerformed
+
+        //VERIFICAMOS SI EL ARCHIVO PELICULAS.XML EXISTE
+        java.io.File archivo = new java.io.File("peliculas.xml");
+        if (!archivo.exists()) {
+            JOptionPane.showMessageDialog(this, "No se encuentra el archivo peliculas.xml\ndebes crear el documentoXML primero");
+            return;
+        } else {
+            //metodo para mostrar vista LeerXml
+
+            //creacion del modelo vista "LeerXml"
+            LeerXML vistaLeerXml = new LeerXML();
+
+            vistaLeerXml.setVisible(true);
+        }
+
+    }//GEN-LAST:event_miLeerXMLActionPerformed
 
     /**
      * @param args the command line arguments
@@ -109,9 +130,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem CrearXML;
-    private javax.swing.JCheckBoxMenuItem LeerXML;
     private javax.swing.JMenu jMenu;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem miCrearXML;
+    private javax.swing.JMenuItem miLeerXML;
     // End of variables declaration//GEN-END:variables
 }

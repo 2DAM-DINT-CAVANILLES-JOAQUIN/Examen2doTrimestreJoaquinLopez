@@ -29,6 +29,8 @@ public class CrearXml extends javax.swing.JFrame {
         initComponents();
         //asignamo que cuando se cierre esta ventana, el programa principal siga funcionando
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        setSize(800, 500);
     }
 
     /**
@@ -111,33 +113,34 @@ public class CrearXml extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tfDuracion)
-                            .addComponent(tfTrailer)
-                            .addComponent(tfTitulo)
-                            .addComponent(cbGeneros, 0, 274, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(130, 130, 130)
-                                .addComponent(jButton1))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton2)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 8, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfTrailer, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tfDuracion, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tfTitulo)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(cbGeneros, javax.swing.GroupLayout.PREFERRED_SIZE, 680, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                .addGap(20, 20, 20))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(327, 327, 327)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,13 +163,13 @@ public class CrearXml extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(tfTrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -191,7 +194,7 @@ public class CrearXml extends javax.swing.JFrame {
         String titulo = tfTitulo.getText().toString();
         String duracion = tfDuracion.getText().toString();
         String genero = cbGeneros.getSelectedItem().toString();
-        String linkPelicula = tfTrailer.getText().toString();
+        String linkPelicula = tfTrailer.getText().toString().toLowerCase();
 
         //usaremos el requestFocus en cada caso para facilitarle al usuario seleccionar el campo.
         if (titulo.isEmpty()) {
@@ -218,16 +221,19 @@ public class CrearXml extends javax.swing.JFrame {
         } // una vez confirmado que todos lo campos cumplen con las condiciones aumentamos el contador y agregamos al textArea
         else {
             // Incrementar contador según el género seleccionado
-            if (genero.equals("Aventura")) {
+            if (genero.equals("AVENTURA")) {
                 contadorAventura++;
-            } else if (genero.equals("Comedia")) {
+            } else if (genero.equals("COMEDIA")) {
                 contadorComedia++;
-            } else if (genero.equals("Misterio")) {
+            } else if (genero.equals("MISTERIO")) {
                 contadorMisterio++;
             }
 
+            //Creamos una nueva pelicula (Objeto) y lo agregamos a lista previamente definida
+            listaPeliculas.add(new Pelicula(titulo, duracion, genero, linkPelicula));
+
             // Mostrar en el listado
-            taListado.append("Título: " + titulo + " | Género: " + genero + " | Duración: " + duracion + " min.\n");
+            taListado.append("Título: " + titulo + " | Género: " + genero + " | Duración: " + duracion + " min." + " | Trailer: " + linkPelicula + "\n");
             //limpiar los campos una vez finalizada la agregacion
             tfDuracion.setText("");
             tfTitulo.setText("");
@@ -296,11 +302,11 @@ public class CrearXml extends javax.swing.JFrame {
 
                     // --- 4. CLASIFICACIÓN POR GÉNERO ---
                     // Según el género que guardamos en el objeto, decidimos en qué categoría colgar la película
-                    if (p.genero.equalsIgnoreCase("Misterio")) {
+                    if (p.genero.equals("MISTERIO")) {
                         nodoMisterio.appendChild(nodoPeli); // Se va para <misterio>
-                    } else if (p.genero.equalsIgnoreCase("Aventura")) {
+                    } else if (p.genero.equals("AVENTURA")) {
                         nodoAventura.appendChild(nodoPeli); // Se va para <aventura>
-                    } else if (p.genero.equalsIgnoreCase("Comedia")) {
+                    } else if (p.genero.equals("COMEDIA")) {
                         nodoComedia.appendChild(nodoPeli);  // Se va para <comedia>
                     }
                 }
