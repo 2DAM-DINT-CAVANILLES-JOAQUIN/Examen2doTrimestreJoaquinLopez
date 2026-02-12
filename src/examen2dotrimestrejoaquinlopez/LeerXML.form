@@ -66,7 +66,7 @@
         <Component class="javax.swing.JTable" name="tablaPeliculas">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="9">
+              <Table columnCount="4" rowCount="0">
                 <Column editable="false" title="GENERO" type="java.lang.Object"/>
                 <Column editable="false" title="TITULO" type="java.lang.Object"/>
                 <Column editable="false" title="DURACION" type="java.lang.Object"/>
@@ -96,6 +96,9 @@
               <TableHeader reorderingAllowed="false" resizingAllowed="false"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tablaPeliculasMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

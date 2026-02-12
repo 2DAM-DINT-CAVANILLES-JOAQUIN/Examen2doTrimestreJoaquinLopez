@@ -4,6 +4,8 @@
  */
 package examen2dotrimestrejoaquinlopez;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author USUARIO
@@ -19,7 +21,8 @@ public class LeerXML extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         //set que al cerrar la ventana solo se cierre esta ventana y no el programa entero
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(800,600);
+        setSize(1200, 600);
+        cargarDatos();
     }
 
     /**
@@ -43,15 +46,7 @@ public class LeerXML extends javax.swing.JFrame {
 
         tablaPeliculas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "GENERO", "TITULO", "DURACION", "TRAILER"
@@ -67,6 +62,11 @@ public class LeerXML extends javax.swing.JFrame {
         });
         tablaPeliculas.getTableHeader().setResizingAllowed(false);
         tablaPeliculas.getTableHeader().setReorderingAllowed(false);
+        tablaPeliculas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPeliculasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaPeliculas);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -93,6 +93,37 @@ public class LeerXML extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tablaPeliculasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPeliculasMouseClicked
+        // TODO add your handling code here:
+        int filaSeleccionada = tablaPeliculas.getSelectedRow();//
+        String titulo = tablaPeliculas.getValueAt(filaSeleccionada, 1).toString();
+        String url = tablaPeliculas.getValueAt(filaSeleccionada, 3).toString();
+
+        int confirmacion = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Deseas abrir en tu navegador el tráiler de: " + titulo + "?",
+                "Ver Tráiler", // Título de la ventana emergente
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE // Icono de pregunta
+        );
+
+        // 2. Evaluar la respuesta
+        if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+            try {
+                // Verificar si el sistema soporta abrir el navegador
+                if (java.awt.Desktop.isDesktopSupported()) {
+                    java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                    if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+                        // Aquí usamos la variable 'linkPelicula' o la que sacaste de la tabla
+                        desktop.browse(new java.net.URI(url));
+                    }
+                }
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al intentar abrir el link: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_tablaPeliculasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -128,6 +159,52 @@ public class LeerXML extends javax.swing.JFrame {
             }
         });
     }
+
+    public void cargarDatos() {
+        // 2. Preparar el parser XML
+        try {
+            javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tablaPeliculas.getModel();
+            java.io.File archivo = new java.io.File("peliculas.xml");
+            javax.xml.parsers.DocumentBuilderFactory dbFactory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+            javax.xml.parsers.DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            org.w3c.dom.Document doc = dBuilder.parse(archivo);
+            doc.getDocumentElement().normalize();
+
+            // 3. Obtener los nodos de los géneros (hijos de <peliculas>)
+            org.w3c.dom.NodeList listaGeneros = doc.getDocumentElement().getChildNodes();
+
+            // Recorrer los géneros (Misterio, Aventura, Comedia)
+            for (int i = 0; i < listaGeneros.getLength(); i++) {
+                org.w3c.dom.Node nodoGenero = listaGeneros.item(i);
+
+                if (nodoGenero.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+                    String nombreGenero = nodoGenero.getNodeName().toUpperCase();
+
+                    // Recorrer las películas dentro de este género
+                    org.w3c.dom.NodeList listaPelis = nodoGenero.getChildNodes();
+                    for (int j = 0; j < listaPelis.getLength(); j++) {
+                        org.w3c.dom.Node nodoPeli = listaPelis.item(j);
+
+                        if (nodoPeli.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+                            org.w3c.dom.Element e = (org.w3c.dom.Element) nodoPeli;
+
+                            // Extraer datos
+                            String titulo = e.getElementsByTagName("titulo").item(0).getTextContent();
+                            String duracion = e.getElementsByTagName("duracion").item(0).getTextContent();
+                            String url = e.getElementsByTagName("trailer").item(0).getTextContent();
+
+                            // 4. AGREGAR FILA A LA TABLA
+                            modelo.addRow(new Object[]{nombreGenero, titulo, duracion, url});
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al leer XML: " + e.getMessage());
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
