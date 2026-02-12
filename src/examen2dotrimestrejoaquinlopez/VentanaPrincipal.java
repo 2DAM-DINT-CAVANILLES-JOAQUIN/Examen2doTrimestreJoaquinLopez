@@ -4,7 +4,9 @@
  */
 package examen2dotrimestrejoaquinlopez;
 
+import java.awt.Color;
 import java.awt.ComponentOrientation;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,8 +21,28 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public VentanaPrincipal() {
 
         initComponents();
-        this.setSize(400, 400);
+        this.setSize(480, 400);
         this.setLocationRelativeTo(null);
+        // --- CÓDIGO PARA ESCALAR EL FONDO ---
+        try {
+            // 1. Cargamos la imagen desde la ruta de recursos
+            ImageIcon iconoOriginal = new ImageIcon("resources/img/imgFondo.png");
+
+            // 2. Escalamos la imagen al ancho y alto actual del JLabel 'fondo'
+            // Usamos SCALE_SMOOTH para que no se vea pixelada
+            java.awt.Image imgEscalada = iconoOriginal.getImage().getScaledInstance(
+                    fondo.getWidth(),
+                    fondo.getHeight(),
+                    java.awt.Image.SCALE_SMOOTH
+            );
+
+            // 3. Creamos el nuevo icono con la imagen ya escalada y lo asignamos
+            fondo.setIcon(new ImageIcon(imgEscalada));
+
+        } catch (Exception e) {
+            System.out.println("Error al cargar el fondo: " + e.getMessage());
+        }
+
     }
 
     /**
@@ -32,6 +54,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fondo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu = new javax.swing.JMenu();
         miCrearXML = new javax.swing.JMenuItem();
@@ -39,6 +62,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 340));
 
         jMenu.setText("Menu");
 
@@ -130,6 +154,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel fondo;
     private javax.swing.JMenu jMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem miCrearXML;
