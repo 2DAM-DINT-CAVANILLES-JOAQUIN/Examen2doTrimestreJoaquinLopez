@@ -14,22 +14,27 @@ import javax.swing.JOptionPane;
  */
 public class CrearXml extends javax.swing.JFrame {
 
-    //variables globales para gestionar las peliculas por generos
+    // Variables globales para llevar la cuenta de cuántas películas hay de cada género
     int contadorAventura = 0;
     int contadorMisterio = 0;
     int contadorComedia = 0;
 
-    //lista para almacenar peliculas
+    // Lista dinámica (ArrayList) que guardará objetos de tipo 'Pelicula' en la memoria RAM
     ArrayList<Pelicula> listaPeliculas = new ArrayList<>();
 
     /**
-     * Creates new form CrearXml
+     * Constructor de la ventana
      */
     public CrearXml() {
-        initComponents();
-        //asignamo que cuando se cierre esta ventana, el programa principal siga funcionando
+        initComponents(); // Inicializa los componentes visuales generados por el diseño
+
+        // Configura que al cerrar esta ventana solo se cierre ella y no todo el programa
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Centra la ventana en la pantalla del usuario
         this.setLocationRelativeTo(null);
+
+        // Define el tamaño inicial de la ventana
         setSize(800, 500);
     }
 
@@ -185,42 +190,38 @@ public class CrearXml extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Acción del botón "AGREGAR PELICULA"
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        //contadores para cada genero de la lista
-
-        //verificaciones de campos antes de agregar una pelicula a la lista.
+        // Captura los datos escritos por el usuario en los campos de texto
         String titulo = tfTitulo.getText().toString();
         String duracion = tfDuracion.getText().toString();
-        String genero = cbGeneros.getSelectedItem().toString();
-        String linkPelicula = tfTrailer.getText().toString().toLowerCase();
+        String genero = cbGeneros.getSelectedItem().toString(); // Obtiene el género del ComboBox
+        String linkPelicula = tfTrailer.getText().toString().toLowerCase(); // Convierte el link a minúsculas
 
-        //usaremos el requestFocus en cada caso para facilitarle al usuario seleccionar el campo.
+        // --- VALIDACIONES DE CAMPOS VACÍOS O INCORRECTOS ---
         if (titulo.isEmpty()) {
-            //error si el campo titulo esta vacio
             JOptionPane.showMessageDialog(this, "Titulo Vacio");
-            tfTitulo.requestFocus();
-        } else if (!duracion.matches("\\d+") && !duracion.isEmpty()) { // \\d+ es igual a [0-9]+
-            // Error: duración no es entero positivo o vacio
+            tfTitulo.requestFocus(); // Devuelve el foco al campo del título
+        } // Valida que la duración sean números (\\d+) y no esté vacío
+        else if (!duracion.matches("\\d+") && !duracion.isEmpty()) {
             JOptionPane.showMessageDialog(this, "El numero ingresadod debe ser un entero y el campo no debe estar vacio");
             tfDuracion.requestFocus();
-        } else if (!(linkPelicula.startsWith("http://") || linkPelicula.startsWith("https://")) && !linkPelicula.isEmpty()) {
-            // Error: URL mal formada 
-            JOptionPane.showMessageDialog(this, "Link incorrecto, debe comenzar por 'http://' o 'https://' y el campo debe estar con informacion");
+        } // Valida que el link empiece con el protocolo correcto
+        else if (!(linkPelicula.startsWith("http://") || linkPelicula.startsWith("https://")) && !linkPelicula.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Link incorrecto, debe comenzar por 'http://' o 'https://'");
             tfTrailer.requestFocus();
-        } // punto 2: Validaciones de límite por género
-        //si los contadores correspondientes a cada categoria son mayores o iguales a 3.
-        //se le notificara al usuario que ya ha alcanzado el limite de peliculas por categorias
+        } // --- VALIDACIÓN DE LÍMITES (MÁXIMO 3 POR GÉNERO) ---
         else if (genero.equals("AVENTURA") && contadorAventura >= 3) {
             JOptionPane.showMessageDialog(this, "Límite alcanzado: Ya hay 3 películas de Aventura.");
         } else if (genero.equals("COMEDIA") && contadorComedia >= 3) {
             JOptionPane.showMessageDialog(this, "Límite alcanzado: Ya hay 3 películas de Comedia.");
         } else if (genero.equals("MISTERIO") && contadorMisterio >= 3) {
             JOptionPane.showMessageDialog(this, "Límite alcanzado: Ya hay 3 películas de Misterio.");
-        } // una vez confirmado que todos lo campos cumplen con las condiciones aumentamos el contador y agregamos al textArea
+        } // --- PROCESO DE AGREGAR SI TODO ESTÁ BIEN ---
         else {
-            // Incrementar contador según el género seleccionado
+            // Incrementa el contador específico según el género seleccionado
             if (genero.equals("AVENTURA")) {
                 contadorAventura++;
             } else if (genero.equals("COMEDIA")) {
@@ -229,12 +230,13 @@ public class CrearXml extends javax.swing.JFrame {
                 contadorMisterio++;
             }
 
-            //Creamos una nueva pelicula (Objeto) y lo agregamos a lista previamente definida
+            // Crea un nuevo objeto Pelicula y lo guarda en nuestro ArrayList global
             listaPeliculas.add(new Pelicula(titulo, duracion, genero, linkPelicula));
 
-            // Mostrar en el listado
+            // Agrega una línea de texto informativa al JTextArea (el listado visual)
             taListado.append("Título: " + titulo + " | Género: " + genero + " | Duración: " + duracion + " min." + " | Trailer: " + linkPelicula + "\n");
-            //limpiar los campos una vez finalizada la agregacion
+
+            // Borra el contenido de los campos para dejar espacio a la siguiente película
             tfDuracion.setText("");
             tfTitulo.setText("");
             tfTrailer.setText("");
@@ -243,6 +245,9 @@ public class CrearXml extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Acción del botón "GENERAR XML"
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
 
